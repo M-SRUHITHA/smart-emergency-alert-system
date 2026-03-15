@@ -3,6 +3,7 @@ package com.example.smartemergencyalert
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,8 +23,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true)
-@androidx.compose.runtime.Composable
+@Composable
 fun EmergencyApp() {
 
     Box(
@@ -36,4 +36,10 @@ fun EmergencyApp() {
         )
     }
 
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewEmergencyApp() {
+    EmergencyApp()
 }
