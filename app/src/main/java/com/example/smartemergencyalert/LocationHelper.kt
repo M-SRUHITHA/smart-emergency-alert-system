@@ -1,4 +1,4 @@
 package com.example.smartemergencyalert
 
-class ShakeDetector {
+class LocationHelper {
 }
