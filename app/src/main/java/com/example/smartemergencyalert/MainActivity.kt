@@ -13,11 +13,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import android.content.pm.PackageManager
 
 class MainActivity : ComponentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState:Bundle?) {
         super.onCreate(savedInstanceState)
+        if(checkSelfPermission(android.Manifest.permission.SEND_SMS)!=
+            PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(android.Manifest.permission.SEND_SMS),1)
+        }
 
         setContent {
             MainApp()
@@ -27,6 +34,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainApp() {
+    val context = LocalContext.current
     // Step 1: Use state to track which screen to show
     val showContacts = remember { mutableStateOf(false) }
 
@@ -62,7 +70,18 @@ fun MainApp() {
 
             // SOS Button
             Button(
-                onClick = { showContacts.value = true }, // switch to ContactScreen
+                onClick = {
+                    val locationHelper = LocationHelper(context)
+                    locationHelper.getLocation { locationLink ->
+                        if (locationLink == "Permission not granted" || locationLink == "location not found") {
+                            Toast.makeText(context,locationLink,Toast.LENGTH_SHORT).show()
+                        } else {
+                            val smsHelper = SmsHelper(context)
+                            smsHelper.sendSms("1234567890", "Helpme! My location:$locationLink")
+                        }
+                    }
+                    showContacts.value = true
+                },// switch to ContactScreen
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
                 modifier = Modifier
                     .width(200.dp)
