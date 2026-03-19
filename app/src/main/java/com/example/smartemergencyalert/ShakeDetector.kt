@@ -27,6 +27,7 @@ class ShakeDetector(
         }
     }
 
+
     fun stop() {
         sensorManager.unregisterListener(this)
     }
@@ -51,3 +52,4 @@ class ShakeDetector(
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+}

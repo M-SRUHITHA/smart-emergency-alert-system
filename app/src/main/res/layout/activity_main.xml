@@ -9,8 +9,7 @@
         android:id="@+id/sosButton"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="SOS" />
-
+        android:text="@string/sos"/>
     <Button
         android:id="@+id/cancelButton"
         android:layout_width="200dp"

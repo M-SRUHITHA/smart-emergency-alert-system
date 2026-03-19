@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Smart Emergency Alert System</string>
+    <string name="sos">SOS</string>
 </resources>
+<string name="sos">SOS</string>
+<string name="cancel">CANCEL</string>
