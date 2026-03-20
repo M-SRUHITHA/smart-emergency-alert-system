@@ -21,10 +21,23 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState:Bundle?) {
         super.onCreate(savedInstanceState)
-        if(checkSelfPermission(android.Manifest.permission.SEND_SMS)!=
-            PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(android.Manifest.permission.SEND_SMS),1)
+        if(
+            checkSelfPermission(android.Manifest.permission.SEND_SMS)!=
+            PackageManager.PERMISSION_GRANTED ||
+            checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)!=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(
+                arrayOf(
+                    android.Manifest.permission.SEND_SMS,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ),
+                1
+            )
+
+
         }
+
 
         setContent {
             MainApp()
@@ -77,7 +90,7 @@ fun MainApp() {
                             Toast.makeText(context,locationLink,Toast.LENGTH_SHORT).show()
                         } else {
                             val smsHelper = SmsHelper(context)
-                            smsHelper.sendSms("1234567890", "Helpme! My location:$locationLink")
+                            smsHelper.sendSms("1234567890", "Help me! My location:$locationLink")
                         }
                     }
                     showContacts.value = true
