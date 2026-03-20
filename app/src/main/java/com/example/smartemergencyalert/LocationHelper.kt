@@ -1,6 +1,9 @@
+package com.example.smartemergencyalert
+
 import android.annotation.SuppressLint
 import android.content.Context
-import com.google.android.gms.location.LocationServices
+import android.location.Location
+import com.google.android.gms.location.*
 
 object LocationHelper {
 
@@ -9,16 +12,50 @@ object LocationHelper {
 
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                val lat = location.latitude
-                val lon = location.longitude
+        // 🔹 First try last known location
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
 
-                val link = "https://maps.google.com/?q=$lat,$lon"
+            if (location != null) {
+                val link = "https://maps.google.com/?q=${location.latitude},${location.longitude}"
                 callback(link)
             } else {
-                callback("Location not available")
+                // 🔥 If null → request fresh location
+                requestNewLocation(fusedLocationClient, callback)
+            }
+        }.addOnFailureListener {
+            requestNewLocation(fusedLocationClient, callback)
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocation(
+        fusedLocationClient: FusedLocationProviderClient,
+        callback: (String) -> Unit
+    ) {
+
+        val locationRequest = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY, 2000
+        ).setMaxUpdates(1).build()
+
+        val locationCallback = object : LocationCallback() {
+            override fun onLocationResult(result: LocationResult) {
+                val location = result.lastLocation
+
+                if (location != null) {
+                    val link = "https://maps.google.com/?q=${location.latitude},${location.longitude}"
+                    callback(link)
+                } else {
+                    callback("Location still not available")
+                }
+
+                fusedLocationClient.removeLocationUpdates(this)
             }
         }
+
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            null
+        )
     }
 }

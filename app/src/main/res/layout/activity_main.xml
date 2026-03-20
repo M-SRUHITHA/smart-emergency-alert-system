@@ -17,4 +17,10 @@
         android:text="CANCEL"
         android:layout_marginTop="20dp"/>
 
+    <Button
+        android:id="@+id/selectContactButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Contact"/>
+
 </LinearLayout>
